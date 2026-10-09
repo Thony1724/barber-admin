@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reportes | Barber Admin</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- Sidebar reutilizable -->
+    <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+    <main class="main-content">
+
+        <!-- Topbar reutilizable -->
+        <header th:replace="~{fragments/topbar :: topbar('Reportes financieros', 'Consulta los ingresos de tu barbería')}"></header>
+
+        <!-- Indicadores -->
+        <section class="dashboard-section">
+
+            <div class="section-header">
+                <h2>Resumen financiero</h2>
+            </div>
+
+            <div class="cards">
+
+                <div class="card">
+                    <span class="card-title">Ingresos de hoy</span>
+
+                    <h2 th:text="${ingresosHoy != null ? 'S/ ' + #numbers.formatDecimal(ingresosHoy, 1, 2) : 'S/ 0.00'}">
+                        S/ 0.00
+                    </h2>
+
+                    <p>Pagos registrados hoy</p>
+                </div>
+
+                <div class="card">
+                    <span class="card-title">Ingresos del mes</span>
+
+                    <h2 th:text="${ingresosMes != null ? 'S/ ' + #numbers.formatDecimal(ingresosMes, 1, 2) : 'S/ 0.00'}">
+                        S/ 0.00
+                    </h2>
+
+                    <p>Total del mes actual</p>
+                </div>
+
+                <div class="card">
+                    <span class="card-title">Ingresos del período</span>
+
+                    <h2 th:text="${ingresosPeriodo != null ? 'S/ ' + #numbers.formatDecimal(ingresosPeriodo, 1, 2) : 'S/ 0.00'}">
+                        S/ 0.00
+                    </h2>
+
+                    <p>Según las fechas seleccionadas</p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Filtros -->
+        <section class="dashboard-section">
+
+            <div class="section-header">
+                <h2>Filtrar por fechas</h2>
+            </div>
+
+            <form th:action="@{/reportes}" method="get" class="reportes-filtros">
+
+                <div class="form-group">
+                    <label for="fechaInicio">Fecha inicial</label>
+
+                    <input type="date"
+                           id="fechaInicio"
+                           name="fechaInicio"
+                           th:value="${fechaInicio}"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label for="fechaFin">Fecha final</label>
+
+                    <input type="date"
+                           id="fechaFin"
+                           name="fechaFin"
+                           th:value="${fechaFin}"
+                           required>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i data-lucide="search"></i>
+                    Consultar
+                </button>
+
+                <a th:href="@{/reportes}" class="btn-secondary">
+                    Limpiar
+                </a>
+
+            </form>
+
+            <p class="error-message"
+               th:if="${error}"
+               th:text="${error}">
+            </p>
+
+        </section>
+
+        <!-- Ingresos por método -->
+        <section class="dashboard-section">
+
+            <div class="section-header">
+                <h2>Ingresos por método de pago</h2>
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table">
+
+                    <thead>
+                        <tr>
+                            <th>Método de pago</th>
+                            <th>Total recaudado</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr th:each="reporte : ${ingresosPorMetodo}">
+
+                            <td th:text="${reporte.metodoPago()}">
+                                YAPE
+                            </td>
+
+                            <td th:text="${'S/ ' + #numbers.formatDecimal(reporte.total(), 1, 2)}">
+                                S/ 0.00
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${ingresosPorMetodo == null or #lists.isEmpty(ingresosPorMetodo)}">
+                            <td colspan="2" class="empty-state">
+                                No hay pagos registrados en este período.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+
+</body>
+</html>

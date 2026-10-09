@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+    <aside class="sidebar" th:fragment="sidebar" xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+        <div class="logo">
+            <h2>BARBER ADMIN</h2>
+            <span>Sistema de gestión</span>
+        </div>
+
+        <nav class="menu">
+
+            <a th:href="@{/}" class="menu-item" th:classappend="${seccionActiva == 'dashboard'} ? 'active'">
+                Dashboard
+            </a>
+
+            <a th:href="@{/mi-cuenta}" class="menu-item" th:classappend="${seccionActiva == 'mi-cuenta'} ? 'active'">
+
+                <i data-lucide="settings"></i>
+
+                <span>Mi cuenta</span>
+
+            </a>
+
+            <a th:href="@{/auditoria}" class="menu-item" th:classappend="${seccionActiva == 'auditoria'} ? 'active'"
+                sec:authorize="hasRole('ADMIN')">
+
+                <i data-lucide="history"></i>
+
+                <span>Auditoría</span>
+
+            </a>
+
+            <a th:href="@{/auditoria/dashboard}" class="btn-primary">
+
+                <i data-lucide="chart-column-increasing"></i>
+
+                Ver estadísticas
+
+            </a>
+
+
+
+            <a th:href="@{/usuarios}" class="menu-item" th:classappend="${seccionActiva == 'usuarios'} ? 'active'"
+                sec:authorize="hasRole('ADMIN')">
+
+                <i data-lucide="users-round"></i>
+
+                <span>Usuarios</span>
+
+            </a>
+
+
+            <a th:href="@{/clientes}" class="menu-item" th:classappend="${seccionActiva == 'clientes'} ? 'active'">
+                Clientes
+            </a>
+
+            <a th:href="@{/citas}" class="menu-item" th:classappend="${seccionActiva == 'citas'} ? 'active'">
+                Citas
+            </a>
+
+            <a th:href="@{/barberos}" class="menu-item" th:classappend="${seccionActiva == 'barberos'} ? 'active'">
+                Barberos
+            </a>
+
+            <a th:href="@{/servicios}" class="menu-item" th:classappend="${seccionActiva == 'servicios'} ? 'active'">
+                Servicios
+            </a>
+
+            <a th:href="@{/citas/agenda}" class="menu-item" th:classappend="${seccionActiva == 'agenda'} ? 'active'">
+                Agenda de citas
+            </a>
+
+            <a th:href="@{/pagos}" class="menu-item" th:classappend="${seccionActiva == 'pagos'} ? 'active'">
+                <i data-lucide="wallet"></i>
+                Pagos
+            </a>
+
+
+
+            <a th:href="@{/reportes}" class="menu-item" th:classappend="${seccionActiva == 'reportes'} ? 'active'"
+                sec:authorize="hasRole('ADMIN')">
+
+                <i data-lucide="chart-column-increasing"></i>
+
+                <span>Reportes</span>
+
+            </a>
+
+
+        </nav>
+
+
+        <!-- Usuario autenticado -->
+        <div class="sidebar-user">
+
+            <div class="sidebar-user-icon">
+                <i data-lucide="circle-user-round"></i>
+            </div>
+
+            <div class="sidebar-user-info">
+
+                <strong sec:authentication="name">
+                    Usuario
+                </strong>
+
+                <span sec:authorize="hasRole('ADMIN')">
+                    Administrador
+                </span>
+
+                <span sec:authorize="hasRole('BARBERO')">
+                    Barbero
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- Cerrar sesión -->
+        <div class="sidebar-logout">
+
+            <form th:action="@{/logout}" method="post">
+
+                <button type="submit" class="logout-btn">
+
+                    <i data-lucide="log-out"></i>
+
+                    <span>Cerrar sesión</span>
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+
+
+    </aside>
+
+</body>
+
+</html>

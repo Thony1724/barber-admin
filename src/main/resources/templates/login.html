@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Iniciar sesión | Barber Admin</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/style.css}">
+</head>
+
+<body class="login-body">
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <div class="login-logo">
+                <i data-lucide="scissors"></i>
+                <h1>Barber Admin</h1>
+            </div>
+
+            <h2>Bienvenido</h2>
+
+            <p class="login-description">
+                Ingresa tus credenciales para continuar.
+            </p>
+
+            <div class="login-error"
+                 th:if="${param.error}">
+                Usuario o contraseña incorrectos.
+            </div>
+
+            <div class="login-success"
+                 th:if="${param.logout}">
+                Has cerrado sesión correctamente.
+            </div>
+
+            <form th:action="@{/login}" method="post">
+
+                <div class="form-group">
+
+                    <label for="username">
+                        Usuario
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Ingresa tu usuario"
+                        autocomplete="username"
+                        required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Contraseña
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Ingresa tu contraseña"
+                        autocomplete="current-password"
+                        required>
+
+                </div>
+
+                <button type="submit"
+                        class="login-button">
+
+                    <i data-lucide="log-in"></i>
+
+                    Iniciar sesión
+
+                </button>
+
+            </form>
+
+            <p class="login-footer">
+                Barber Admin © 2026
+            </p>
+
+        </div>
+
+    </div>
+
+    <th:block th:replace=
+        "~{fragments/scripts :: scripts}">
+    </th:block>
+
+</body>
+</html>

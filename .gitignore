@@ -1,0 +1,76 @@
+
+# ========================================
+# BARBER ADMIN - GITIGNORE
+# ========================================
+
+# Documentación generada por Spring Initializr
+HELP.md
+
+# ========================================
+# MAVEN
+# ========================================
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# ========================================
+# SPRING TOOL SUITE
+# ========================================
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# ========================================
+# INTELLIJ IDEA
+# ========================================
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# ========================================
+# NETBEANS
+# ========================================
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# ========================================
+# VISUAL STUDIO CODE
+# ========================================
+.vscode/
+
+# ========================================
+# VARIABLES DE ENTORNO Y SECRETOS
+# ========================================
+.env
+.env.*
+!.env.example
+
+application-local.properties
+application-secret.properties
+application-private.properties
+
+*.pem
+*.key
+*.p12
+*.pfx
+
+# ========================================
+# ARCHIVOS TEMPORALES
+# ========================================
+*.log
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db

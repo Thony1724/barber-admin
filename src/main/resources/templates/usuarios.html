@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Usuarios | Barber Admin</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+        <main class="main-content">
+
+            <!-- TOPBAR -->
+            <header
+                th:replace="~{fragments/topbar :: topbar('Gestión de usuarios', 'Administra las cuentas del sistema')}">
+            </header>
+
+            <section class="dashboard-section">
+
+                <!-- ENCABEZADO -->
+                <div class="section-header">
+
+                    <h2>Usuarios registrados</h2>
+
+                    <a th:href="@{/usuarios/nuevo}" class="btn-primary">
+                        <i data-lucide="user-plus"></i>
+                        Nuevo usuario
+                    </a>
+
+                </div>
+
+                <!-- MENSAJES -->
+                <div class="alert-success" th:if="${mensajeExito}" th:text="${mensajeExito}">
+                </div>
+
+                <div class="alert-error" th:if="${mensajeError}" th:text="${mensajeError}">
+                </div>
+
+                <!-- TABLA -->
+                <div class="table-responsive">
+
+                    <table class="table">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Usuario</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr th:each="usuario : ${usuarios}">
+
+                                <!-- ID -->
+                                <td th:text="${usuario.id}">
+                                    1
+                                </td>
+
+                                <!-- USUARIO -->
+                                <td th:text="${usuario.username}">
+                                    admin
+                                </td>
+
+                                <!-- ROL -->
+                                <td th:text="${usuario.rol}">
+                                    ADMIN
+                                </td>
+
+                                <!-- ESTADO -->
+                                <td>
+
+                                    <span class="estado-badge"
+                                        th:classappend="${usuario.activo} ? 'estado-pagado' : 'estado-pendiente'"
+                                        th:text="${usuario.activo} ? 'ACTIVO' : 'INACTIVO'">
+
+                                        ACTIVO
+
+                                    </span>
+
+                                </td>
+
+                                <!-- ACCIONES -->
+                                <td>
+
+                                    <div class="actions">
+
+                                        <!-- DESACTIVAR -->
+                                        <form th:if="${usuario.activo}"
+                                            th:action="@{/usuarios/{id}/desactivar(id=${usuario.id})}" method="post"
+                                            class="delete-form">
+
+                                            <button type="submit" class="btn-delete"
+                                                th:disabled="${usuario.username == usuarioActual}"
+                                                onclick="return confirm('¿Estás seguro de desactivar este usuario?')">
+
+                                                <i data-lucide="user-x"></i>
+                                                Desactivar
+
+                                            </button>
+
+                                        </form>
+
+                                        <!-- ACTIVAR -->
+
+                                        <form th:if="${usuario.activo}"
+                                            th:action="@{/usuarios/{id}/desactivar(id=${usuario.id})}" method="post"
+                                            class="delete-form">
+
+                                            <button type="submit" class="btn-delete"
+                                                th:disabled="${usuario.username == usuarioActual}"
+                                                onclick="return confirm('¿Estás seguro de desactivar este usuario?')">
+
+                                                <i data-lucide="user-x"></i>
+                                                Desactivar
+
+                                            </button>
+
+                                        </form>
+
+
+                                        <a th:href="@{/usuarios/{id}/password(id=${usuario.id})}" class="btn-edit">
+
+                                            <i data-lucide="key-round"></i>
+
+                                            Contraseña
+
+                                        </a>
+
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            <!-- SIN REGISTROS -->
+                            <tr th:if="${#lists.isEmpty(usuarios)}">
+
+                                <td colspan="5" class="empty-state">
+                                    No hay usuarios registrados.
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- SCRIPTS -->
+    <th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+
+</body>
+
+</html>

@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Registrar pago | Barber Admin</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+    <main class="main-content">
+
+        <header th:replace="~{fragments/topbar :: topbar('Registrar pago', 'Registra un pago de una cita completada')}"></header>
+
+        <section class="dashboard-section">
+
+            <div class="section-header">
+                <div>
+                    <h2>Nuevo pago</h2>
+                    <p>Completa la información del pago</p>
+                </div>
+
+                <a th:href="@{/pagos}" class="btn-secondary">
+                    Volver
+                </a>
+            </div>
+
+            <div class="error-message"
+                 th:if="${errorGeneral}"
+                 th:text="${errorGeneral}">
+            </div>
+
+            <form th:action="@{/pagos}"
+                  th:object="${pago}"
+                  method="post">
+
+                <div class="form-group">
+
+                    <label for="citaId">Cita completada</label>
+
+                    <select id="citaId" th:field="*{citaId}" required>
+
+                        <option value="">Seleccione una cita</option>
+
+                        <option th:each="cita : ${citas}"
+                                th:value="${cita.id}"
+                                th:text="${'Cita #' + cita.id + ' - ' + cita.cliente.nombre + ' ' + cita.cliente.apellido + ' - S/ ' + cita.precio}">
+                        </option>
+
+                    </select>
+
+                    <div class="error-message"
+                         th:if="${#fields.hasErrors('citaId')}"
+                         th:errors="*{citaId}">
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="monto">Monto del pago (S/)</label>
+
+                    <input type="number"
+                           id="monto"
+                           th:field="*{monto}"
+                           min="0.01"
+                           step="0.01"
+                           placeholder="Ejemplo: 35.00"
+                           required>
+
+                    <div class="error-message"
+                         th:if="${#fields.hasErrors('monto')}"
+                         th:errors="*{monto}">
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="metodoPago">Método de pago</label>
+
+                    <select id="metodoPago"
+                            th:field="*{metodoPago}"
+                            required>
+
+                        <option value="">Seleccione un método</option>
+
+                        <option th:each="metodo : ${metodosPago}"
+                                th:value="${metodo}"
+                                th:text="${metodo}">
+                        </option>
+
+                    </select>
+
+                    <div class="error-message"
+                         th:if="${#fields.hasErrors('metodoPago')}"
+                         th:errors="*{metodoPago}">
+                    </div>
+
+                </div>
+
+                <div class="actions">
+
+                    <button type="submit" class="btn-primary">
+                        <i data-lucide="save"></i>
+                        Guardar pago
+                    </button>
+
+                    <a th:href="@{/pagos}" class="btn-secondary">
+                        Cancelar
+                    </a>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Clientes | Barber Admin</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+        <main class="main-content">
+
+            <header th:replace="~{fragments/topbar :: topbar(
+    'Clientes',
+    'Administración de clientes de la barbería'
+)}"></header>
+
+
+            <section class="dashboard-section">
+
+                <div class="section-header">
+
+                    <div>
+                        <h2>Clientes registrados</h2>
+                        <p>Listado general de clientes</p>
+                    </div>
+
+                    <a th:href="@{/clientes/nuevo}" class="btn-primary">
+                        Nuevo cliente
+                    </a>
+
+                </div>
+
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Teléfono</th>
+                            <th>Email</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr th:each="cliente : ${clientes}">
+
+                            <td th:text="${cliente.id}"></td>
+
+                            <td th:text="${cliente.nombre}"></td>
+
+                            <td th:text="${cliente.apellido}"></td>
+
+                            <td th:text="${cliente.telefono}"></td>
+
+                            <td th:text="${cliente.email}"></td>
+
+                            <td>
+                                <div class="actions">
+
+                                    <a th:href="@{/clientes/{id}/editar(id=${cliente.id})}" class="btn-edit">
+                                        <i data-lucide="pencil"></i>
+                                        Editar
+                                    </a>
+
+                                    <form th:action="@{/clientes/{id}/eliminar(id=${cliente.id})}" method="post"
+                                        class="delete-form">
+
+                                        <button type="submit" class="btn-delete"
+                                            onclick="return confirm('¿Seguro que deseas eliminar este cliente?')">
+
+                                            <i data-lucide="trash-2"></i>
+                                            Eliminar
+
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </section>
+
+        </main>
+
+    </div>
+    <th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+</body>
+
+</html>

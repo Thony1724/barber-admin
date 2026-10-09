@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Agenda de Citas | Barber Admin</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="main-content">
+
+            <!-- TOPBAR -->
+            <header th:replace="~{fragments/topbar :: topbar(
+    'Citas',
+    'Administración del personal de la barbería'
+)}"></header>
+
+            <!-- SECCIÓN PRINCIPAL -->
+            <section class="dashboard-section">
+
+                <div class="section-header">
+
+                    <div>
+                        <h2>Agenda diaria</h2>
+                        <p>
+                            Visualiza las citas organizadas por barbero
+                        </p>
+                    </div>
+
+                    <a th:href="@{/citas/nuevo}"
+                       class="btn-primary">
+                        Nueva cita
+                    </a>
+
+                </div>
+
+                <!-- FILTRO DE FECHA -->
+                <form th:action="@{/citas/agenda}"
+                      method="get"
+                      class="agenda-filtros">
+
+                    <div class="form-group">
+
+                        <label for="fecha">
+                            Seleccionar fecha
+                        </label>
+
+                        <input
+                            type="date"
+                            id="fecha"
+                            name="fecha"
+                            th:value="${fechaSeleccionada}"
+                            required>
+
+                    </div>
+
+                    <button type="submit"
+                            class="btn-primary">
+                        Consultar agenda
+                    </button>
+
+                    <a th:href="@{/citas}"
+                       class="btn-secondary">
+                        Ver listado
+                    </a>
+
+                </form>
+
+                <!-- RESUMEN -->
+                <div class="agenda-resumen">
+
+                    <h3>
+                        Reservas del día:
+                        <span th:text="${#lists.size(agenda)}">
+                            0
+                        </span>
+                    </h3>
+
+                    <p>
+                        Fecha:
+                        <strong
+                            th:text="${#temporals.format(fechaSeleccionada, 'dd/MM/yyyy')}">
+                            10/10/2026
+                        </strong>
+                    </p>
+
+                </div>
+
+                <!-- SIN BARBEROS -->
+                <div class="empty-state"
+                     th:if="${#lists.isEmpty(barberos)}">
+
+                    <h3>No hay barberos registrados</h3>
+
+                    <p>
+                        Registra un barbero para comenzar
+                        a organizar las citas.
+                    </p>
+
+                </div>
+
+                <!-- AGENDA -->
+                <div class="agenda-grid"
+                     th:unless="${#lists.isEmpty(barberos)}">
+
+                    <!-- COLUMNA DE CADA BARBERO -->
+                    <div class="agenda-columna"
+                         th:each="barbero : ${barberos}">
+
+                        <div class="agenda-barbero">
+
+                            <h3
+                                th:text="|${barbero.nombre} ${barbero.apellido}|">
+                                Nombre del barbero
+                            </h3>
+
+                            <span
+                                th:text="${barbero.activo} ? 'Activo' : 'Inactivo'">
+                                Activo
+                            </span>
+
+                        </div>
+
+                        <!-- CITAS -->
+                        <div class="agenda-citas">
+
+                            <th:block th:each="cita : ${agenda}">
+
+                                <div
+                                    class="agenda-cita"
+                                    th:if="${cita.barberoId() == barbero.id}"
+                                    th:classappend="|estado-${cita.estado().name().toLowerCase()}|">
+
+                                    <!-- HORARIO -->
+                                    <div class="agenda-horario">
+
+                                        <span
+                                            th:text="${#temporals.format(cita.horaInicio(), 'HH:mm')}">
+                                            09:00
+                                        </span>
+
+                                        <span>—</span>
+
+                                        <span
+                                            th:text="${#temporals.format(cita.horaFin(), 'HH:mm')}">
+                                            09:30
+                                        </span>
+
+                                    </div>
+
+                                    <!-- CLIENTE -->
+                                    <h4 th:text="${cita.cliente()}">
+                                        Juan Pérez
+                                    </h4>
+
+                                    <!-- SERVICIO -->
+                                    <p th:text="${cita.servicio()}">
+                                        Corte clásico
+                                    </p>
+
+                                    <!-- ESTADO -->
+                                    <span
+                                        class="agenda-estado"
+                                        th:text="${cita.estado()}">
+                                        PROGRAMADA
+                                    </span>
+
+                                </div>
+
+                            </th:block>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+    <th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+</body>
+</html>

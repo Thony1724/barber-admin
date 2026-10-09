@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Barber Admin</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- MENÚ LATERAL REUTILIZABLE -->
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="main-content">
+
+            <!-- HEADER SUPERIOR REUTILIZABLE -->
+            <header th:replace="~{fragments/topbar :: topbar('Dashboard', 'Resumen general de la barbería')}"></header>
+
+            <!-- TARJETAS DE ESTADÍSTICAS -->
+            <section class="cards">
+
+                <!-- CLIENTES -->
+                <div class="card">
+                    <span class="card-title">
+                        Clientes
+                    </span>
+
+                    <h2 th:text="${totalClientes}">0</h2>
+
+                    <p>Clientes registrados</p>
+                </div>
+
+                <!-- CITAS DE HOY -->
+                <div class="card">
+                    <span class="card-title">
+                        Citas de hoy
+                    </span>
+
+                    <h2 th:text="${citasHoy}">0</h2>
+
+                    <p>Citas no canceladas de hoy</p>
+                </div>
+
+                <!-- BARBEROS -->
+                <div class="card">
+                    <span class="card-title">
+                        Barberos
+                    </span>
+
+                    <h2 th:text="${barberosActivos}">0</h2>
+
+                    <p>Barberos activos</p>
+                </div>
+
+                <!-- SERVICIOS -->
+                <div class="card">
+                    <span class="card-title">
+                        Servicios
+                    </span>
+
+                    <h2 th:text="${serviciosActivos}">0</h2>
+
+                    <p>Servicios activos</p>
+                </div>
+
+                <!-- INGRESOS -->
+                <div class="card">
+                    <span class="card-title">
+                        Ingresos de hoy
+                    </span>
+
+                    <h2>S/ 0.00</h2>
+
+                    <p>Pendiente de integrar con Pagos</p>
+                </div>
+
+            </section>
+
+            <!-- SECCIÓN INFERIOR -->
+            <section class="dashboard-section">
+
+                <div class="section-header">
+
+                    <div>
+                        <h2>Citas de hoy</h2>
+                        <p>Consulta las reservas y su estado</p>
+                    </div>
+
+                    <a th:href="@{/citas/nuevo}" class="btn-primary">
+                        <i data-lucide="plus"></i>
+                        Nueva cita
+                    </a>
+
+                </div>
+
+
+                <!-- CUANDO NO HAY CITAS -->
+                <div class="empty-state" th:if="${#lists.isEmpty(citasDelDia)}">
+
+                    <i data-lucide="calendar-days"></i>
+
+                    <h3>No hay citas para hoy</h3>
+
+                    <p>Las citas del día aparecerán aquí.</p>
+
+                    <a th:href="@{/citas/nuevo}" class="btn-primary">
+                        Nueva cita
+                    </a>
+
+                </div>
+
+                <!-- CUANDO EXISTEN CITAS -->
+                <div class="table-responsive" th:unless="${#lists.isEmpty(citasDelDia)}">
+
+                    <table class="table">
+
+                        <thead>
+                            <tr>
+                                <th>Hora</th>
+                                <th>Cliente</th>
+                                <th>Barbero</th>
+                                <th>Servicio</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr th:each="cita : ${citasDelDia}">
+
+                                <td th:text="${#temporals.format(cita.horaInicio(), 'HH:mm')}">
+                                    09:00
+                                </td>
+
+                                <td th:text="${cita.cliente()}">
+                                    Cliente
+                                </td>
+
+                                <td th:text="${cita.barbero()}">
+                                    Barbero
+                                </td>
+
+                                <td th:text="${cita.servicio()}">
+                                    Servicio
+                                </td>
+
+
+                                <td>
+                                    <span class="estado-badge"
+                                        th:classappend="${'estado-' + #strings.toLowerCase(cita.estado().name())}"
+                                        th:text="${cita.estado()}">
+                                        PROGRAMADA
+                                    </span>
+                                </td>
+
+
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- SCRIPTS REUTILIZABLES -->
+    <th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+
+</body>
+
+</html>

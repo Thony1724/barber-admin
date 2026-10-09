@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo cliente | Barber Admin</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+        <main class="main-content">
+
+            <header th:replace="~{fragments/topbar :: topbar(
+    'Barberos',
+    'Administración del personal de la barbería'
+)}"></header>
+
+            <section class="dashboard-section">
+
+                <form th:action="${barberoId == null}
+            ? @{/barberos}
+            : @{/barberos/{id}(id=${barberoId})}" th:object="${barbero}" method="post">
+
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" th:field="*{nombre}">
+
+                        <p class="error-message" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Apellido</label>
+                        <input type="text" th:field="*{apellido}">
+
+                        <p class="error-message" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}">
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="tel" th:field="*{telefono}" maxlength="9" inputmode="numeric">
+
+                        <p class="error-message" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}">
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" th:field="*{email}">
+
+                        <p class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Especialidad</label>
+                        <input type="text" th:field="*{especialidad}" placeholder="Ej. Cortes clásicos y barba">
+
+                        <p class="error-message" th:if="${#fields.hasErrors('especialidad')}"
+                            th:errors="*{especialidad}">
+                        </p>
+                    </div>
+
+                    <button type="submit" class="btn-primary" th:text="${barberoId == null}
+                ? 'Guardar barbero'
+                : 'Actualizar barbero'">
+                        Guardar
+                    </button>
+
+                    <a th:href="@{/barberos}">
+                        Cancelar
+                    </a>
+
+                </form>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+
+</body>
+
+</html>

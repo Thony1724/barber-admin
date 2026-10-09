@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pagos | Barber Admin</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+        <main class="main-content">
+
+            <header th:replace="~{fragments/topbar :: topbar('Pagos', 'Historial de pagos de la barbería')}"></header>
+
+
+            <section class="dashboard-section">
+
+                <div class="alert-success" th:if="${mensajeExito}" th:text="${mensajeExito}">
+                </div>
+
+
+                <div class="section-header">
+
+                    <h2>Estado de pagos por cita</h2>
+
+                    <a th:href="@{/pagos/nuevo}" class="btn-primary">
+                        <i data-lucide="plus-circle"></i>
+                        Registrar pago
+                    </a>
+
+                </div>
+
+
+                <div class="table-responsive">
+                    <table class="table">
+
+                        <thead>
+                            <tr>
+                                <th>Cita</th>
+                                <th>Cliente</th>
+                                <th>Servicio</th>
+                                <th>Precio</th>
+                                <th>Pagado</th>
+                                <th>Pendiente</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr th:each="resumen : ${resumenesPago}">
+
+                                <td th:text="${resumen.citaId()}">
+                                    1
+                                </td>
+
+                                <td th:text="${resumen.cliente()}">
+                                    Juan Pérez
+                                </td>
+
+                                <td th:text="${resumen.servicio()}">
+                                    Corte de cabello
+                                </td>
+
+                                <td th:text="${'S/ ' + resumen.precio()}">
+                                    S/ 50.00
+                                </td>
+
+                                <td th:text="${'S/ ' + resumen.totalPagado()}">
+                                    S/ 30.00
+                                </td>
+
+                                <td th:text="${'S/ ' + resumen.saldoPendiente()}">
+                                    S/ 20.00
+                                </td>
+
+                                <td>
+                                    <span class="estado-badge"
+                                        th:classappend="${'estado-' + #strings.toLowerCase(resumen.estadoPago().name())}"
+                                        th:text="${resumen.estadoPago()}">
+                                        PENDIENTE
+                                    </span>
+                                </td>
+
+                                <td>
+
+                                    <a th:if="${resumen.saldoPendiente().signum() > 0}"
+                                        th:href="@{/pagos/nuevo(citaId=${resumen.citaId()})}" class="btn-primary">
+
+                                        <i data-lucide="wallet"></i>
+                                        Cobrar
+
+                                    </a>
+
+                                    <span th:if="${resumen.saldoPendiente().signum() <= 0}"
+                                        class="estado-badge estado-pagado">
+
+                                        Pagado
+
+                                    </span>
+
+                                </td>
+
+
+                            </tr>
+
+                            <tr th:if="${#lists.isEmpty(resumenesPago)}">
+                                <td colspan="8" class="empty-state">
+                                    Todavía no hay citas completadas.
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+    <th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+
+</body>
+
+</html>

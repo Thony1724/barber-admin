@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Estadísticas de auditoría | Barber Admin</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+    <main class="main-content">
+
+        <header th:replace="~{fragments/topbar :: topbar('Estadísticas de auditoría', 'Actividad y seguridad del sistema')}"></header>
+
+        <section class="dashboard-section">
+
+            <div class="section-header">
+
+                <h2>Resumen de actividad</h2>
+
+                <a th:href="@{/auditoria}" class="btn-secondary">
+                    <i data-lucide="history"></i>
+                    Ver historial
+                </a>
+
+            </div>
+
+            <!-- INDICADORES -->
+            <div class="auditoria-stats-grid">
+
+                <div class="auditoria-stat-card">
+
+                    <div class="auditoria-stat-icon">
+                        <i data-lucide="activity"></i>
+                    </div>
+
+                    <p>Total de actividades</p>
+
+                    <h3 th:text="${totalActividades}">0</h3>
+
+                </div>
+
+                <div class="auditoria-stat-card">
+
+                    <div class="auditoria-stat-icon">
+                        <i data-lucide="calendar-days"></i>
+                    </div>
+
+                    <p>Actividades de hoy</p>
+
+                    <h3 th:text="${actividadesHoy}">0</h3>
+
+                </div>
+
+                <div class="auditoria-stat-card">
+
+                    <div class="auditoria-stat-icon">
+                        <i data-lucide="users"></i>
+                    </div>
+
+                    <p>Usuarios con actividad hoy</p>
+
+                    <h3 th:text="${usuariosConActividadHoy}">0</h3>
+
+                </div>
+
+                <div class="auditoria-stat-card">
+
+                    <div class="auditoria-stat-icon">
+                        <i data-lucide="list-checks"></i>
+                    </div>
+
+                    <p>Acción más frecuente</p>
+
+                    <h3 class="auditoria-accion-destacada"
+                        th:text="${accionMasFrecuente}">
+                        SIN REGISTROS
+                    </h3>
+
+                </div>
+
+            </div>
+
+            <!-- ESTADÍSTICAS POR ACCIÓN -->
+            <div class="auditoria-estadisticas-panel">
+
+                <div class="section-header">
+                    <h2>Actividades por tipo de acción</h2>
+                </div>
+
+                <div th:if="${#lists.isEmpty(estadisticas)}"
+                     class="empty-state">
+
+                    Todavía no existen actividades registradas.
+
+                </div>
+
+                <div th:each="estadistica : ${estadisticas}"
+                     class="auditoria-barra-item">
+
+                    <div class="auditoria-barra-info">
+
+                        <strong th:text="${estadistica.accion()}">
+                            CREAR_USUARIO
+                        </strong>
+
+                        <span th:text="${estadistica.cantidad()}">
+                            0
+                        </span>
+
+                    </div>
+
+                    <div class="auditoria-barra-fondo">
+
+                        <div class="auditoria-barra-progreso"
+                             th:style="|width: ${totalActividades > 0 ? (estadistica.cantidad() * 100.0 / totalActividades) : 0}%;|">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+
+</body>
+</html>

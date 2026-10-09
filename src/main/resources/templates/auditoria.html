@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Auditoría | Barber Admin</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+        <main class="main-content">
+
+            <header
+                th:replace="~{fragments/topbar :: topbar('Historial de actividad', 'Consulta las operaciones registradas')}">
+            </header>
+
+            <section class="dashboard-section">
+
+
+                <div class="section-header">
+
+                    <h2>Historial de actividad</h2>
+
+                    <a th:href="@{/auditoria/exportar(
+            username=${username},
+            accion=${accion},
+            fechaInicio=${fechaInicio},
+            fechaFin=${fechaFin}
+        )}" class="btn-exportar-excel">
+
+                        <i data-lucide="file-spreadsheet"></i>
+
+                        Exportar Excel
+
+                    </a>
+
+                </div>
+
+
+                <!-- MENSAJE DE ERROR -->
+                <div class="alert-error" th:if="${mensajeError}" th:text="${mensajeError}">
+                </div>
+
+                <!-- FILTROS -->
+                <form th:action="@{/auditoria}" method="get" class="auditoria-filtros">
+
+                    <div class="form-group">
+
+                        <label for="username">Usuario</label>
+
+                        <input type="text" id="username" name="username" th:value="${username}"
+                            placeholder="Buscar usuario">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="accion">Acción</label>
+
+                        <select id="accion" name="accion">
+
+                            <option value="">Todas las acciones</option>
+
+                            <option value="CREAR_USUARIO" th:selected="${accion == 'CREAR_USUARIO'}">
+                                Crear usuario
+                            </option>
+
+                            <option value="ACTIVAR_USUARIO" th:selected="${accion == 'ACTIVAR_USUARIO'}">
+                                Activar usuario
+                            </option>
+
+                            <option value="DESACTIVAR_USUARIO" th:selected="${accion == 'DESACTIVAR_USUARIO'}">
+                                Desactivar usuario
+                            </option>
+
+                            <option value="CAMBIAR_PASSWORD" th:selected="${accion == 'CAMBIAR_PASSWORD'}">
+                                Cambiar contraseña
+                            </option>
+
+                            <option value="RESTABLECER_PASSWORD" th:selected="${accion == 'RESTABLECER_PASSWORD'}">
+                                Restablecer contraseña
+                            </option>
+
+
+                            <option value="REGISTRAR_PAGO" th:selected="${accion == 'REGISTRAR_PAGO'}">
+                                Registrar pago
+                            </option>
+
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="fechaInicio">Desde</label>
+
+                        <input type="date" id="fechaInicio" name="fechaInicio" th:value="${fechaInicio}">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="fechaFin">Hasta</label>
+
+                        <input type="date" id="fechaFin" name="fechaFin" th:value="${fechaFin}">
+
+                    </div>
+
+                    <div class="auditoria-filtros-acciones">
+
+                        <button type="submit" class="btn-primary">
+                            <i data-lucide="search"></i>
+                            Buscar
+                        </button>
+
+                        <a th:href="@{/auditoria}" class="btn-secondary">
+                            Limpiar
+                        </a>
+
+                    </div>
+
+                </form>
+
+                <!-- TOTAL DE REGISTROS -->
+                <p class="auditoria-total">
+                    Registros encontrados:
+                    <strong th:text="${totalRegistros}">0</strong>
+                </p>
+
+                <!-- TABLA -->
+                <div class="table-responsive">
+
+                    <table class="table">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Usuario</th>
+                                <th>Acción</th>
+                                <th>Módulo</th>
+                                <th>Descripción</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr th:each="actividad : ${actividades}">
+
+                                <td th:text="${actividad.id}">1</td>
+
+                                <td th:text="${actividad.username}">
+                                    admin
+                                </td>
+
+                                <td>
+                                    <span class="auditoria-accion" th:text="${actividad.accion}">
+                                        CREAR_USUARIO
+                                    </span>
+                                </td>
+
+                                <td th:text="${actividad.modulo}">
+                                    USUARIOS
+                                </td>
+
+                                <td th:text="${actividad.descripcion}">
+                                    Descripción
+                                </td>
+
+                                <td th:text="${#temporals.format(actividad.fecha, 'dd/MM/yyyy HH:mm:ss')}">
+                                    09/10/2026 11:00
+                                </td>
+
+                            </tr>
+
+                            <tr th:if="${#lists.isEmpty(actividades)}">
+                                <td colspan="6" class="empty-state">
+                                    No se encontraron actividades.
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- PAGINACIÓN -->
+                <div class="auditoria-paginacion" th:if="${totalPaginas > 0}">
+
+                    <span th:text="|Página ${paginaActual + 1} de ${totalPaginas}|">
+                        Página 1 de 1
+                    </span>
+
+                    <div class="auditoria-paginacion-botones">
+
+                        <a th:if="${paginaActual > 0}" th:href="@{/auditoria(
+                           username=${username},
+                           accion=${accion},
+                           fechaInicio=${fechaInicio},
+                           fechaFin=${fechaFin},
+                           pagina=${paginaActual - 1}
+                       )}" class="btn-secondary">
+
+                            <i data-lucide="chevron-left"></i>
+                            Anterior
+
+                        </a>
+
+                        <a th:if="${paginaActual + 1 < totalPaginas}" th:href="@{/auditoria(
+                           username=${username},
+                           accion=${accion},
+                           fechaInicio=${fechaInicio},
+                           fechaFin=${fechaFin},
+                           pagina=${paginaActual + 1}
+                       )}" class="btn-secondary">
+
+                            Siguiente
+                            <i data-lucide="chevron-right"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+
+</body>
+
+</html>

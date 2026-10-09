@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Mi cuenta | Barber Admin</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+    <main class="main-content">
+
+        <header th:replace="~{fragments/topbar :: topbar('Mi cuenta', 'Configuración de seguridad')}"></header>
+
+        <section class="dashboard-section">
+
+            <div class="section-header">
+                <h2>Cambiar contraseña</h2>
+            </div>
+
+            <p>
+                Usuario:
+                <strong th:text="${username}">admin</strong>
+            </p>
+
+            <div class="alert-success"
+                 th:if="${mensajeExito}"
+                 th:text="${mensajeExito}">
+            </div>
+
+            <div class="alert-error"
+                 th:if="${mensajeError}"
+                 th:text="${mensajeError}">
+            </div>
+
+            <form th:action="@{/mi-cuenta/password}"
+                  th:object="${passwordDTO}"
+                  method="post"
+                  class="password-form">
+
+                <div class="form-group">
+
+                    <label for="passwordActual">
+                        Contraseña actual
+                    </label>
+
+                    <input type="password"
+                           id="passwordActual"
+                           th:field="*{passwordActual}"
+                           autocomplete="current-password"
+                           required>
+
+                    <small class="error-message"
+                           th:if="${#fields.hasErrors('passwordActual')}"
+                           th:errors="*{passwordActual}">
+                    </small>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="passwordNueva">
+                        Nueva contraseña
+                    </label>
+
+                    <input type="password"
+                           id="passwordNueva"
+                           th:field="*{passwordNueva}"
+                           autocomplete="new-password"
+                           minlength="12"
+                           required>
+
+                    <small class="error-message"
+                           th:if="${#fields.hasErrors('passwordNueva')}"
+                           th:errors="*{passwordNueva}">
+                    </small>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="confirmarPassword">
+                        Confirmar contraseña
+                    </label>
+
+                    <input type="password"
+                           id="confirmarPassword"
+                           th:field="*{confirmarPassword}"
+                           autocomplete="new-password"
+                           required>
+
+                    <small class="error-message"
+                           th:if="${#fields.hasErrors('confirmarPassword')}"
+                           th:errors="*{confirmarPassword}">
+                    </small>
+
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i data-lucide="shield-check"></i>
+                    Actualizar contraseña
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+<th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+
+</body>
+</html>

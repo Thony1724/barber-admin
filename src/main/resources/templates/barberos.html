@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Clientes | Barber Admin</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+
+        <main class="main-content">
+
+            <header th:replace="~{fragments/topbar :: topbar(
+    'Barberos',
+    'Administración del personal de la barbería'
+)}"></header>
+
+
+            <section class="dashboard-section">
+
+                <div class="section-header">
+                    <div>
+                        <h2>Barberos</h2>
+                        <p>Administra el personal de la barbería</p>
+                    </div>
+
+                    <a th:href="@{/barberos/nuevo}" class="btn-primary">
+                        Nuevo barbero
+                    </a>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Email</th>
+                            <th>Especialidad</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr th:each="barbero : ${barberos}">
+
+                            <td th:text="${barbero.id}"></td>
+
+                            <td th:text="${barbero.nombre + ' ' + barbero.apellido}">
+                            </td>
+
+                            <td th:text="${barbero.telefono}"></td>
+
+                            <td th:text="${barbero.email}"></td>
+
+                            <td th:text="${barbero.especialidad}"></td>
+
+                            <td>
+                                <span th:if="${barbero.activo}">
+                                    Activo
+                                </span>
+
+                                <span th:unless="${barbero.activo}">
+                                    Inactivo
+                                </span>
+                            </td>
+
+                            <td class="actions">
+
+                                <!-- EDITAR BARBERO -->
+                                <a th:href="@{/barberos/{id}/editar(id=${barbero.id})}" class="btn-edit">
+
+                                    <i data-lucide="pencil"></i>
+                                    Editar
+
+                                </a>
+
+                                <!-- DESACTIVAR BARBERO -->
+                                <form th:if="${barbero.activo}"
+                                    th:action="@{/barberos/{id}/desactivar(id=${barbero.id})}" method="post"
+                                    class="delete-form">
+
+                                    <button type="submit" class="btn-delete"
+                                        onclick="return confirm('¿Deseas desactivar este barbero?')">
+
+                                        <i data-lucide="user-x"></i>
+                                        Desactivar
+
+                                    </button>
+
+                                </form>
+
+                                <!-- ACTIVAR BARBERO -->
+                                <form th:unless="${barbero.activo}"
+                                    th:action="@{/barberos/{id}/activar(id=${barbero.id})}" method="post"
+                                    class="delete-form">
+
+                                    <button type="submit" class="btn-activar">
+
+                                        <i data-lucide="user-check"></i>
+                                        Activar
+
+                                    </button>
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+
+</body>
+
+</html>

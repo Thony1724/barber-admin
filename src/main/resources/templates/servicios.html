@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Servicios | Barber Admin</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+
+        <main class="main-content">
+
+
+            <header th:replace="~{fragments/topbar :: topbar(
+    'Servicios',
+    'Administración de servicios de la barbería'
+)}"></header>
+
+
+            <section class="dashboard-section">
+
+                <div class="section-header">
+                    <div>
+                        <h2>Servicios</h2>
+                        <p>Administra los servicios ofrecidos por la barbería</p>
+                    </div>
+
+                    <a th:href="@{/servicios/nuevo}" class="btn-primary">
+                        Nuevo servicio
+                    </a>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Servicio</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                            <th>Duración</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr th:each="servicio : ${servicios}">
+
+                            <td th:text="${servicio.id}"></td>
+
+                            <td th:text="${servicio.nombre}"></td>
+
+                            <td th:text="${servicio.descripcion}"></td>
+
+                            <td th:text="'S/ ' + ${servicio.precio}"></td>
+
+                            <td th:text="${servicio.duracionMinutos} + ' min'"></td>
+
+                            <td>
+                                <span th:if="${servicio.activo}">
+                                    Activo
+                                </span>
+
+                                <span th:unless="${servicio.activo}">
+                                    Inactivo
+                                </span>
+                            </td>
+
+                            <td class="actions">
+
+                                <!-- EDITAR SERVICIO -->
+                                <a th:href="@{/servicios/{id}/editar(id=${servicio.id})}" class="btn-edit">
+
+                                    <i data-lucide="pencil"></i>
+                                    Editar
+
+                                </a>
+
+                                <!-- DESACTIVAR SERVICIO -->
+                                <form th:if="${servicio.activo}"
+                                    th:action="@{/servicios/{id}/desactivar(id=${servicio.id})}" method="post"
+                                    class="delete-form">
+
+                                    <button type="submit" class="btn-delete"
+                                        onclick="return confirm('¿Deseas desactivar este servicio?')">
+
+                                        <i data-lucide="circle-off"></i>
+                                        Desactivar
+
+                                    </button>
+
+                                </form>
+
+                                <!-- ACTIVAR SERVICIO -->
+                                <form th:unless="${servicio.activo}"
+                                    th:action="@{/servicios/{id}/activar(id=${servicio.id})}" method="post"
+                                    class="delete-form">
+
+                                    <button type="submit" class="btn-activar">
+
+                                        <i data-lucide="circle-check"></i>
+                                        Activar
+
+                                    </button>
+
+                                </form>
+
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </section>
+
+        </main>
+
+    </div>
+    <th:block th:replace="~{fragments/scripts :: scripts}"></th:block>
+</body>
+
+</html>
