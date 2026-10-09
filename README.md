@@ -98,7 +98,7 @@ sequenceDiagram
     end
 ```
 
-> El diagrama muestra el flujo previsto en el servicio. En la versión actual de GitHub existe una incidencia en el manejo de errores de `PagoController.guardar`, descrita en [Observaciones técnicas](#-observaciones-técnicas).
+> El diagrama representa el flujo del servicio. El controlador muestra el resultado exitoso o regresa al formulario cuando se produce un error de negocio.
 
 ## 🗃️ Modelo de datos
 
@@ -277,7 +277,7 @@ Esta documentación se basa en el código fuente; las restricciones físicas de 
 
 ## ⚠️ Observaciones técnicas
 
-- **Error pendiente en la rama `main`:** en [`PagoController.java`](src/main/java/com/practicando/practicando/controller/PagoController.java), el bloque `catch (PagoInvalidoException)` añade `mensajeExito` y, al salir del bloque, redirige a `/pagos` incluso si falló el registro. El mensaje `errorGeneral` no llega a mostrarse correctamente en el formulario. Se recomienda devolver `pagos-form` desde el `catch` y redirigir solo después de un pago exitoso. **Este README no modifica ese código.**
+- **Corrección aplicada:** [`PagoController.guardar`](src/main/java/com/practicando/practicando/controller/PagoController.java) muestra el mensaje de éxito y redirige a `/pagos` únicamente después de registrar correctamente el pago. Si ocurre una `PagoInvalidoException`, muestra el error y vuelve al formulario `pagos-form`.
 - El proyecto usa `spring.jpa.hibernate.ddl-auto=update` para desarrollo; para producción conviene planificar migraciones versionadas y una configuración segura de credenciales.
 - El repositorio es privado: los enlaces a código y documentación requieren permisos de acceso.
 
