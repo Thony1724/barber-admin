@@ -77,25 +77,35 @@ public class PagoController {
             Model model,
             RedirectAttributes redirectAttributes) {
 
+        // 1. Validar los campos del formulario
         if (result.hasErrors()) {
             cargarOpciones(model);
             return "pagos-form";
         }
 
         try {
+
+            // 2. Registrar el pago
             pagoService.registrarPago(dto);
 
-        } catch (PagoInvalidoException e) {
-
-            model.addAttribute("errorGeneral", e.getMessage());
-            cargarOpciones(model);
-
+            // 3. Mostrar mensaje únicamente si el pago fue exitoso
             redirectAttributes.addFlashAttribute(
                     "mensajeExito",
                     "Pago registrado correctamente");
-        }
 
-        return "redirect:/pagos";
+            return "redirect:/pagos";
+
+        } catch (PagoInvalidoException e) {
+
+            // 4. Mostrar el error sin salir del formulario
+            model.addAttribute(
+                    "errorGeneral",
+                    e.getMessage());
+
+            cargarOpciones(model);
+
+            return "pagos-form";
+        }
     }
 
     private void cargarOpciones(Model model) {
